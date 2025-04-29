@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM} ubuntu:jammy AS ubuntu-jammy
+FROM --platform=${TARGETPLATFORM} ubuntu:oracular AS ubuntu-oracular
 
 COPY resources/ /
 
@@ -7,11 +7,10 @@ RUN apt-get update && \
 	apt-get upgrade --yes && \
 	apt-get clean
 
-RUN adduser --disabled-password --home /home/liferay liferay --uid 1000 && \
-	addgroup liferay liferay && \
-	usermod -g 1000 liferay
+RUN userdel ubuntu && \
+	useradd --create-home --home-dir /home/liferay --shell /usr/sbin/nologin --uid 1000 --user-group liferay
 
-FROM ubuntu-jammy
+FROM ubuntu-oracular
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
